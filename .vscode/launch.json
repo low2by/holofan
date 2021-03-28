@@ -8,7 +8,8 @@
             "name": "train",
             "type": "python",
             "request": "launch",
-            "module": "facetracker"
+            "module": "facetracker",
+            "python": "D:\\School\\2020-2021\\ECE_3992\\Project\\holofan\\holofan\\Scripts\\python.exe"
         },
         {
             "name": "load and test",
