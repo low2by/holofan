@@ -4,6 +4,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
+from keras.callbacks import ModelCheckpoint
 matplotlib.use('TkAgg')
 
 x_train = np.load( "face_landmarks_cleaned/x_train.npy" ) / 255
@@ -44,12 +45,15 @@ model_layers = [
 model = tf.keras.Sequential( model_layers )
 model.compile( loss=tf.keras.losses.mean_squared_error , optimizer=tf.keras.optimizers.Adam( lr=0.0001 ) , metrics=[ 'mse' ] )
 
+mcp_save = ModelCheckpoint('best weights.hdf5', save_best_only=True, monitor='val_loss', mode='min')
+print(x_train)
 model.fit(
     x=x_train,
     y=y_train,
-    epochs=10,
+    validation_data = (x_test, y_test),
+    callbacks=[mcp_save],
+    epochs=250,
     batch_size=50,
-
 )
 
 fig = plt.figure(figsize=( 50 , 50 ))
