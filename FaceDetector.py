@@ -7,12 +7,25 @@ class FaceDetector():
 
     def __init__(self):
         cascPath = "haarcascade_frontalface_default.xml"
-        self.faceCascade = cv2.CascadeClassifier(cascPath)  
+        self.faceCascade = cv2.CascadeClassifier(cascPath)
+        self.usingCam = False
+        self.cam = None
 
+    def useCam(self):
+        self.usingCam = True
+        self.cam = cv2.VideoCapture(0)
+        print(self.cam.get(cv2.CAP_PROP_FRAME_WIDTH))
+        print(self.cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        return self.cam.get(cv2.CAP_PROP_FRAME_WIDTH), self.cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
     def detect(self, imagePath):
         global image
-        image = cv2.imread(imagePath)
+
+        if self.usingCam:
+            _, image = self.cam.read()
+        else:
+            image = cv2.imread(imagePath)
+        
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         faces = self.faceCascade.detectMultiScale(
@@ -23,23 +36,47 @@ class FaceDetector():
             flags = cv2.CASCADE_SCALE_IMAGE
             )
 
-        print("Found {0} faces!".format(len(faces)))
+        # print("Found {0} faces!".format(len(faces)))
 
         return faces
 
         # Draw a rectangle around the faces
         
 
-    def output(self, faces):
+    def output(self, faces, write=False):
         global image
         for (x, y, w, h) in faces:
             cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
-        cv2.imwrite("output.png", image)  
-        # cv2.imshow("Faces found", image)
-        # cv2.waitKey(0)
+            centerx = int(x + w/2)
+            centery = int(y + h/2)
+            cv2.circle(image,(centerx, centery), 5, (0,0,255), -1)
+        if write==True:
+            cv2.imwrite("output.png", image)
+        else:
+            cv2.imshow("Faces found", image)
+            cv2.waitKey(1)
 
 if __name__=="__main__":
-    detector = FaceDetector()
-    faces = detector.detect("yoink.jpg")
-    detector.output(faces)
+    print()
+    if len(sys.argv) == 1:
+        detector = FaceDetector()
+        faces = detector.detect("yoink.jpg")
+        detector.output(faces, True)
+    elif sys.argv[1] == "-c":
+        detector = FaceDetector()
+        w, h = detector.useCam()
+        print(w/2 - w*0.05, w/2 + w*0.05)
+        itr = 0
+        while True:
+            faces = detector.detect("yoink.jpg")
 
+            if itr %500 == 0 and len(faces)>0:
+                centerx = int(faces[0][0] + faces[0][2]/2)
+                if centerx < w/2 - w*0.05:
+                    print("step_left")
+                elif centerx > w/2 + w*0.05:
+                    print("step_right")
+                else:
+                    print("stay")
+
+            detector.output(faces)
