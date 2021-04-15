@@ -1,3 +1,4 @@
+from WebcamVideoStream import WebcamVideoStream
 import cv2
 import sys
 
@@ -14,9 +15,10 @@ class FaceDetector():
     def useCam(self):
         self.usingCam = True
         self.cam = cv2.VideoCapture(0)
-        print(self.cam.get(cv2.CAP_PROP_FRAME_WIDTH))
-        print(self.cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        return self.cam.get(cv2.CAP_PROP_FRAME_WIDTH), self.cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        self.cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m','j','p','g'))
+        return 640, 480
 
     def detect(self, imagePath):
         global image
@@ -57,7 +59,6 @@ class FaceDetector():
             cv2.waitKey(1)
 
 if __name__=="__main__":
-    print()
     if len(sys.argv) == 1:
         detector = FaceDetector()
         faces = detector.detect("yoink.jpg")
@@ -70,7 +71,7 @@ if __name__=="__main__":
         while True:
             faces = detector.detect("yoink.jpg")
 
-            if itr %500 == 0 and len(faces)>0:
+            if len(faces)>0:
                 centerx = int(faces[0][0] + faces[0][2]/2)
                 if centerx < w/2 - w*0.05:
                     print("step_left")
