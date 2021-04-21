@@ -10,15 +10,15 @@ class Stepper():
         self.Motor1 = DRV8825(dir_pin=13, step_pin=19, enable_pin=12, mode_pins=(16, 17, 20))
         self.Motor1.SetMicroStep("hardware","") #set with DIP switches
 
-    def step_num(self, num):
-        self.Motor1.TurnStep(Dir='forward', steps=num, stepdelay = 0.005)
+    def step_num(self, num, dir='forward'):
+        self.Motor1.TurnStep(Dir=dir, steps=num, stepdelay = 0.001)
     
-    def step_deg(self, deg):
+    def step_deg(self, deg, dir='forward'):
         steps = deg/res*step_amount
-        self.Motor1.TurnStep(Dir='forward', steps=steps, stepdelay = 0.005)
+        self.Motor1.TurnStep(Dir=dir, steps=steps, stepdelay = 0.001)
 
-    def step(self, dir):
-        self.Motor1.TurnStep(Dir=dir, steps=1, stepdelay = 0.005)
+    def step(self, dir='forward'):
+        self.Motor1.TurnStep(Dir=dir, steps=1, stepdelay = 0.001)
 
     
 if __name__=="__main__":

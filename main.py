@@ -1,5 +1,10 @@
 from FaceDetector import FaceDetector
 from Stepper import Stepper
+from ObjectSpace import ObjectSpace
+
+space = ObjectSpace()
+space.load_obj("banana.obj", "banana")
+space.update()
 
 stepper = Stepper()
 detector = FaceDetector()
@@ -13,10 +18,14 @@ while True:
         centerx = int(faces[0][0] + faces[0][2]/2)
         if centerx < w/2 - w*0.05:
             print("step_left")
-            stepper.step('forward')
+            stepper.step_num(4, 'forward')
+            space.rotateModel(-1.8)
+            space.update()
         elif centerx > w/2 + w*0.05:
             print("step_right")
-            stepper.step('backward')
+            stepper.step_num(4, 'backward')
+            space.rotateModel(1.8)
+            space.update()
         else:
             print("stay")
 
