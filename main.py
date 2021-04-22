@@ -12,7 +12,7 @@ w, h = detector.useCam()
 print(w/2 - w*0.05, w/2 + w*0.05)
 itr = 0
 while True:
-    faces = detector.detect("yoink.jpg")
+    faces = detector.detect()
 
     if len(faces)>0:
         centerx = int(faces[0][0] + faces[0][2]/2)
