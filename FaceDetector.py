@@ -20,7 +20,7 @@ class FaceDetector():
         self.cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m','j','p','g'))
         return 640, 480
 
-    def detect(self, imagePath):
+    def detect(self, imagePath=None):
         global image
 
         if self.usingCam:

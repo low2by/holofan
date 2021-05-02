@@ -31,9 +31,9 @@ if __name__=="__main__":
 #         Motor1 = DRV8825(dir_pin=13, step_pin=19, enable_pin=12, mode_pins=(16, 17, 20))
 #         Motor1.SetMicroStep("hardware","") #set with DIP switches
 # 
-#         Motor1.TurnStep(Dir='forward', steps=800, stepdelay = 0.005)
+#         Motor1.TurnStep(Dir='forward', steps=8, stepdelay = 0.005)
 #         time.sleep(0.5)
-#         Motor1.TurnStep(Dir='backward', steps=800, stepdelay = 0.005)
+#         Motor1.TurnStep(Dir='backward', steps=8, stepdelay = 0.005)
 #         Motor1.Stop()
     except:
         # GPIO.cleanup()

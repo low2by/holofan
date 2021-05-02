@@ -1,16 +1,20 @@
 from FaceDetector import FaceDetector
-from Stepper import Stepper
 from ObjectSpace import ObjectSpace
+import smbus
 
+def encode_stepper(steps, dir):
+    print(int(steps | (dir<<7)))
+    return int(steps | (dir<<7))
 
-def search(detector, stepper, space):
+def search(detector, space):
     global last_step_dir
     
     while True:
         faces = detector.detect()
 
         if len(faces)==0:
-            stepper.step_num(1, last_step_dir)
+            #stepper.step_num(1, last_step_dir)
+            bus.write_byte(address, encode_stepper(1, 1 if last_step_dir == 'forward' else 0))
             if last_step_dir == 'forward':
                 space.rotateModel(-1.8/4)
                 space.update()
@@ -20,12 +24,13 @@ def search(detector, stepper, space):
         else:
             return faces
 
-
 space = ObjectSpace()
 space.load_obj("banana.obj", "banana")
 space.update()
 
-stepper = Stepper()
+bus = smbus.SMBus(1)
+address = 0x69
+
 detector = FaceDetector()
 w, h = detector.useCam()
 last_step_dir = 'backward'
@@ -41,13 +46,15 @@ while True:
         if centerx < w/2 - w*0.05:
             print("step_left")
             last_step_dir = 'forward'
-            stepper.step_num(4, 'forward')
+            #stepper.step_num(4, 'forward')
+            bus.write_byte(address, encode_stepper(4, 1))
             space.rotateModel(-1.8)
             space.update()
         elif centerx > w/2 + w*0.05:
             print("step_right")
             last_step_dir = 'backward'
-            stepper.step_num(4, 'backward')
+            #stepper.step_num(4, 'backward')
+            bus.write_byte(address, encode_stepper(4, 0))
             space.rotateModel(1.8)
             space.update()
         else:
@@ -55,6 +62,6 @@ while True:
     else:
         no_face_found_count += 1
         if(no_face_found_count > 10):
-            search(detector, stepper, space)
+            search(detector, space)
 
     detector.output(faces)            
