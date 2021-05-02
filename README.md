@@ -1,8 +1,4 @@
 # holofan
 
-Run the following commands to get the training data
-- `wget https://github.com/shubham0204/Dataset_Archives/blob/master/face_landmarks_cleaned.zip?raw=true -O data.zip`
-- `unzip data.zip`     (`tar -xf data.zip` to unzip in windows)
+The purpose of this mini project was to demonstrate what we have learned in this embedded systems class. We decided to combine it with our senior project prototype that we created for ECE3992. Our prototype was designed to have a webcam detect the user's face and rotate the stepper motor connected to our designed base to move our display monitor. In this mini project, we had to reimplement some parts to satisfy the requirements for this class. The three milestones that we were able to accomplish included GPIO, Interrupt, and I2C. The parts we needed to implement this project include the stm32 board, Raspberry Pi, stepper motor, stepper motor hat, webcam, and a monitor. The stm32 board is connected to the stepper motor hat that transmits data with I2C as well as the Pi. We used OpenCV to help us implement facial tracking written in python on the Pi. The stepper motor is then connected with the stepper motor hat. 
 
-Run the following command to activate the virtual env:
-- `source \holofan\Scripts\activate` (`.\holofan\Scripts\activate` to activate on windows)
