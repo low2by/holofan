@@ -6,10 +6,24 @@ import numpy as np
 import math
 import board
 
+import pigpio
+
+from encoder_test.py import data
+
+POINTS = 128
+start_frame = [2, 192, 128]
+
 def main():
+    
+    #print data
+    
+    pi = pigpio.pi()
+    
+    spi = pi.spi_open(0, 125000000, 0)
+    pi.spi_write(spi, )
+    
     image = Image.open('/home/pi/Downloads/bunny.jpeg')
     arr = asarray(image)
-    POINTS = 128
     
     dots = dotstar.DotStar(board.SCK, board.MOSI, 128, brightness=0.05, auto_write=False, baudrate=8000000)
     
