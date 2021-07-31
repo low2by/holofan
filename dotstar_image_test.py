@@ -5,6 +5,7 @@ import numpy as np
 import math
 import pigpio
 
+REFRESHES = 512
 POINTS = 128
 apa102_cmd=[0]*4 + [0xE1,0, 0, 0]*POINTS + [255]*4
 
@@ -21,16 +22,16 @@ def main():
     
     lines = np.zeros((0, len(apa102_cmd)), int)
     
-    for i in range(1024):
+    for i in range(REFRESHES):
         #print(i*180/1024)
-        pixels = get_pixels(i*359/1024, arr, POINTS)
+        pixels = get_pixels(i*(360/float(REFRESHES)), arr, POINTS)
         for j in range(len(pixels)):
             set_LED_RGB(j, pixels[j][0],pixels[j][1],pixels[j][2])
         #print(pixels.shape)
         #print(lines.shape)
         lines= np.append(lines, np.array(apa102_cmd)[np.newaxis,:], axis=0)
         
-    for i in range(1024):
+    for i in range(REFRESHES):
         pi.spi_xfer(h, lines[i,:].tolist())
         
 def set_LED_RGB(led, r, g, b):
