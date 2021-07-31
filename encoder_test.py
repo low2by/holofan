@@ -55,10 +55,11 @@ def readpos():
     GPIO.output(PIN_CS,1)
     return data-1024;
 try:
+
     while(1):
         print readpos()
         time.sleep(0.1)
-        #break
+        break
         
 finally:
     print "cleaning up GPIO"

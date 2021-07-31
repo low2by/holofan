@@ -10,7 +10,7 @@ apa102_cmd=[0]*4 + [0xE1,0, 0, 0]*POINTS + [255]*4
 
 import pigpio
 
-from encoder_test.py import data
+from encoder_test import *
 
 POINTS = 128
 start_frame = [2, 192, 128]
@@ -19,9 +19,7 @@ def main():
     pi = pigpio.pi()
     h = pi.spi_open(0, int(32e6), 0xEF)
     
-    
-    
-    image = Image.open('/home/pi/Downloads/download.jpeg')
+    image = Image.open('/home/pi/Desktop/holofan/images/uofu_logo_web.jpg')
     arr = asarray(image)
     
     #dots = dotstar.DotStar(board.SCK, board.MOSI, 128, brightness=0.05, auto_write=False, baudrate=8000000)
@@ -38,7 +36,7 @@ def main():
         lines= np.append(lines, np.array(apa102_cmd)[np.newaxis,:], axis=0)
         
     for i in range(1024):
-        pi.spi_xfer(h, lines[i,:].tolist())
+        pi.spi_xfer(h, lines[readpos(),:].tolist())
         
 def set_LED_RGB(led, r, g, b):
     offset = (led*4) +4
