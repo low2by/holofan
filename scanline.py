@@ -33,13 +33,13 @@ def get_pixels(deg, arr, POINTS):
             x = _x
             y = int(m*x + b) #truncating
 #            y = round(m*x + b) #rounding
-            pixels[idx] = arr[y][x]
+            pixels[idx] = arr[min(y, arr.shape[0]-1)][min(x, arr.shape[1]-1)]
     else:
         for idx, _y in hpoints:
             y = _y
             x = int((y-b)/m) #truncating
 #            x = round((y-b)/m) #rounding
-            pixels[idx] = arr[y][x]
+            pixels[idx] = arr[min(y, arr.shape[0]-1)][min(x, arr.shape[1]-1)]
     return pixels
 
 @profile

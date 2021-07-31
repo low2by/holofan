@@ -4,13 +4,17 @@ from PIL import Image
 import numpy as np
 import math
 import pigpio
-
-POINTS = 128
-apa102_cmd=[0]*4 + [0xE1,0, 0, 0]*POINTS + [255]*4
-
+import RPi.GPIO as GPIO
 import pigpio
 
-from encoder_test import *
+GPIO.setmode(GPIO.BCM)
+
+from encoder_test import readpos
+
+
+REFRESHES = 512
+POINTS = 128
+apa102_cmd=[0]*4 + [0xE1,0, 0, 0]*POINTS + [255]*4
 
 POINTS = 128
 start_frame = [2, 192, 128]
@@ -26,9 +30,9 @@ def main():
     
     lines = np.zeros((0, len(apa102_cmd)), int)
     
-    for i in range(1024):
+    for i in range(REFRESHES):
         #print(i*180/1024)
-        pixels = get_pixels(i*359/1024, arr, POINTS)
+        pixels = get_pixels(i*(360/float(REFRESHES)), arr, POINTS)
         for j in range(len(pixels)):
             set_LED_RGB(j, pixels[j][0],pixels[j][1],pixels[j][2])
         #print(pixels.shape)
