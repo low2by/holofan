@@ -54,7 +54,6 @@ def readpos():
                 clockdown()
     GPIO.output(PIN_CS,1)
     return data-1024;
-
 try:
     while(1):
         print readpos()
