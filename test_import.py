@@ -1,6 +1,9 @@
-from encoder_test.py import data
+from encoder_test import Encoder
 
 def main():
+	encoder = Encoder();
 	while(1):
-		print data;
+		print encoder.readpos();
 	
+if __name__ == "__main__":
+	main()
