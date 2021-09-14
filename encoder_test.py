@@ -18,11 +18,11 @@ class Encoder:
 
         # pin setup done here
         try:
-            GPIO.setup(PIN_CLK,GPIO.OUT)
-            GPIO.setup(PIN_DAT,GPIO.IN)
-            GPIO.setup(PIN_CS,GPIO.OUT)                                                                                                    
-            GPIO.output(PIN_CS,1)
-            GPIO.output(PIN_CLK,1)
+            GPIO.setup(self.PIN_CLK,GPIO.OUT)
+            GPIO.setup(self.PIN_DAT,GPIO.IN)
+            GPIO.setup(self.PIN_CS,GPIO.OUT)                                                                                                    
+            GPIO.output(self.PIN_CS,1)
+            GPIO.output(self.PIN_CLK,1)
         except:
             print "ERROR. Unable to setup the configuration requested"                                     
 
@@ -76,9 +76,10 @@ class Encoder:
 if __name__ == "__main__":
         
     try:
-
+        
         while(1):
-            print readpos()
+            
+            #Print readpos()
             time.sleep(0.1)
             #break
             

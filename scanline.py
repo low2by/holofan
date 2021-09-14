@@ -47,11 +47,12 @@ def get_pixels(deg, arr, POINTS):
 def main():
     from encoder_test import Encoder
     encoder = Encoder();
-    image = Image.open('/home/pi/Desktop/Project/yeet.jpg')
+    image = Image.open('/home/pi/Desktop/test.jpeg')
     arr = asarray(image)
     POINTS = 128
     while(1):
         
+        #line = get_pixels(encoder.readpos()*0.3516, arr, POINTS).reshape((1, POINTS, 3))
         line = get_pixels(encoder.readpos()*0.3516, arr, POINTS).reshape((1, POINTS, 3))
         #thickline = np.tile(line, (30,1,1))
 #        img = Image.fromarray(line, 'RGB')

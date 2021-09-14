@@ -6,13 +6,12 @@ import math
 import pigpio
 import RPi.GPIO as GPIO
 import pigpio
+from encoder_test import Encoder
 
 GPIO.setmode(GPIO.BCM)
 
-from encoder_test import readpos
 
-
-REFRESHES = 512
+REFRESHES = 1024
 POINTS = 128
 apa102_cmd=[0]*4 + [0xE1,0, 0, 0]*POINTS + [255]*4
 
@@ -21,9 +20,11 @@ start_frame = [2, 192, 128]
 
 def main():
     pi = pigpio.pi()
-    h = pi.spi_open(0, int(32e6), 0xEF)
+    h = pi.spi_open(0, int(8e6), 0xEF)
+
+    encoder = Encoder();
     
-    image = Image.open('/home/pi/Desktop/holofan/images/uofu_logo_web.jpg')
+    image = Image.open('/home/pi/Desktop/color_wheel.jpeg')
     arr = asarray(image)
     
     #dots = dotstar.DotStar(board.SCK, board.MOSI, 128, brightness=0.05, auto_write=False, baudrate=8000000)
@@ -39,9 +40,12 @@ def main():
         #print(lines.shape)
         lines= np.append(lines, np.array(apa102_cmd)[np.newaxis,:], axis=0)
         
-    for i in range(1024):
-        pi.spi_xfer(h, lines[readpos(),:].tolist())
-        
+    #for i in range(REFRESHES):
+    #    pi.spi_xfer(h, lines[i,:].tolist())
+    
+    while(True):
+        pi.spi_xfer(h, lines[encoder.readpos(), :].tolist())
+
 def set_LED_RGB(led, r, g, b):
     offset = (led*4) +4
     apa102_cmd[offset+1] = b
