@@ -38,6 +38,7 @@ while True:
     if len(faces)>0:
         no_face_found_count = 0
         centerx = int(faces[0][0] + faces[0][2]/2)
+        centery = int(faces[0][1] + faces[0][3]/2)
         if centerx < w/2 - w*0.05:
             print("step_left")
             last_step_dir = 'forward'
@@ -50,6 +51,19 @@ while True:
             stepper.step_num(4, 'backward')
             space.rotateModel(1.8)
             space.update()
+        
+        if centery < h/2 - h*0.05:
+            print("image_down")
+            #last_step_dir = 'forward'
+            #stepper.step_num(4, 'forward')
+            #space.rotateModel(-1.8)
+            space.update()
+        elif centery > h/2 + h*0.05:
+            print("image_up")
+            #last_step_dir = 'backward'
+            #stepper.step_num(4, 'backward')
+            #space.rotateModel(1.8)
+            space.update()        
         else:
             print("stay")
     else:
