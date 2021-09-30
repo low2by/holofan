@@ -56,13 +56,13 @@ while True:
             print("image_down")
             #last_step_dir = 'forward'
             #stepper.step_num(4, 'forward')
-            #space.rotateModel(-1.8)
+            space.rotateModel(-1.8, 'z')
             space.update()
         elif centery > h/2 + h*0.05:
             print("image_up")
             #last_step_dir = 'backward'
             #stepper.step_num(4, 'backward')
-            #space.rotateModel(1.8)
+            space.rotateModel(1.8, 'z')
             space.update()        
         else:
             print("stay")
