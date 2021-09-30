@@ -56,7 +56,7 @@ while True:
             print("image_down")
             #last_step_dir = 'forward'
             #stepper.step_num(4, 'forward')
-            space.rotateModel(-1.8, 'z')
+            space.rotateModel(-1.8, 'z') #hoping it is in the z direction
             space.update()
         elif centery > h/2 + h*0.05:
             print("image_up")
