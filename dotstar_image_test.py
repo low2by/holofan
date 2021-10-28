@@ -11,7 +11,7 @@ from encoder_test import Encoder
 GPIO.setmode(GPIO.BCM)
 
 
-REFRESHES = 1024
+REFRESHES = 512
 POINTS = 128
 apa102_cmd=[0]*4 + [0xE1,0, 0, 0]*POINTS + [255]*4
 
@@ -24,7 +24,7 @@ def main():
 
     encoder = Encoder();
     
-    image = Image.open('/home/pi/Desktop/color_wheel.jpeg')
+    image = Image.open('/home/pi/Desktop/test.jpeg')
     arr = asarray(image)
     
     #dots = dotstar.DotStar(board.SCK, board.MOSI, 128, brightness=0.05, auto_write=False, baudrate=8000000)
@@ -43,7 +43,10 @@ def main():
     #for i in range(REFRESHES):
     #    pi.spi_xfer(h, lines[i,:].tolist())
     
+    print("done yeet")
+    
     while(True):
+        print(encoder.readpos())
         pi.spi_xfer(h, lines[encoder.readpos(), :].tolist())
 
 def set_LED_RGB(led, r, g, b):

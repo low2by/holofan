@@ -52,7 +52,9 @@ class Encoder:
         GPIO.output(self.PIN_CS,0)
         time.sleep(self.delay*2)
         #MSB()
-        data = 1*self.ns
+        data = 0
+        
+        full_data = 0
         
         for i in range(0,self.bitcount):
             if i<10:
@@ -62,16 +64,22 @@ class Encoder:
                 for j in range(0,self.ns):
                     data <<= 1  
                     data|= GPIO.input(self.PIN_DAT)
+                    
+                    full_data <<= 1  
+                    full_data |= GPIO.input(self.PIN_DAT)
                 #clockdown()
                 GPIO.output(self.PIN_CLK,0)
             else:
                 for k in range(0,6):
                     #clockup()
                     GPIO.output(self.PIN_CLK,1)
+                    full_data <<= 1  
+                    full_data |= GPIO.input(self.PIN_DAT)
                     #clockdown()
                     GPIO.output(self.PIN_CLK,0)
         GPIO.output(self.PIN_CS,1)
-        return data-1024;
+        #print("{:010b}".format(full_data))
+        return data-512;
 
 if __name__ == "__main__":
         

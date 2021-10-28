@@ -6,6 +6,14 @@ import odrive
 from odrive.enums import *
 import time
 import math
+import signal
+
+def handler(signum, frame):
+    my_drive.axis0.config.sensorless_ramp.vel = 0
+    my_drive.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+    exit(1)
+
+signal.signal(signal.SIGINT, handler)
 
 # Find a connected ODrive (this will block until you connect one)
 print("finding an odrive...")
@@ -30,7 +38,7 @@ while my_drive.axis0.current_state != AXIS_STATE_IDLE:
 # Closed loop control 
 print("Changing state to closed loop control")
 #my_drive.axis0.config.sensorless_ramp.vel = 380.95/60 * 2 * math.pi * 7
-my_drive.axis0.config.sensorless_ramp.vel = 1000/60 * 2 * math.pi * 7
+my_drive.axis0.config.sensorless_ramp.vel = 300/60 * 2 * math.pi * 7
 my_drive.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
 
 while my_drive.axis0.current_state != AXIS_STATE_CLOSED_LOOP_CONTROL:

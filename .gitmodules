@@ -1,0 +1,3 @@
+[submodule "HolofanRenderer"]
+	path = HolofanRenderer
+	url = https://github.com/alexCharters/HolofanRenderer.git
