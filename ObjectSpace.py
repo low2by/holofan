@@ -47,6 +47,14 @@ class ObjectSpace:
 #                   GPIO.cleanup()
             self.mymodel.draw()
 
+    def rotateModelAbst(self, deg, axis='y'):
+        if axis.lower() == 'x':
+            self.mymodel.rotateToX(deg)
+        if axis.lower() == 'y':
+            self.mymodel.rotateToY(deg)
+        if axis.lower() == 'z':
+            self.mymodel.rotateToZ(deg)
+    
     def rotateModel(self, deg, axis='y'):
         if axis.lower() == 'x':
             self.mymodel.rotateIncX(deg)
@@ -77,5 +85,5 @@ if __name__=="__main__":
     space = ObjectSpace()
     space.load_obj("banana.obj", "banana")
     while True:
-        space.rotateModel(6)
+        space.rotateModel(0)
         space.update()

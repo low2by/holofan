@@ -11,7 +11,7 @@ from encoder_test import Encoder
 GPIO.setmode(GPIO.BCM)
 
 
-REFRESHES = 512
+REFRESHES = 1024
 POINTS = 128
 apa102_cmd=[0]*4 + [0xE1,0, 0, 0]*POINTS + [255]*4
 
@@ -47,6 +47,7 @@ def main():
     
     while(True):
         print(encoder.readpos())
+        #print("{:010b}".format(encoder.readpos()))
         pi.spi_xfer(h, lines[encoder.readpos(), :].tolist())
 
 def set_LED_RGB(led, r, g, b):

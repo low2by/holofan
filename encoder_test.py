@@ -35,23 +35,25 @@ class Encoder:
 
     def clockup(self):
         GPIO.output(self.PIN_CLK,1)
-    def clockdown(sef):
+        
+    def clockdown(self):
         GPIO.output(self.PIN_CLK,0)
+        
     def MSB(self):
         # Most Significant Bit
-        clockdown()
+        self.clockdown()
 
     def readpos(self):
         
-        GPIO.setup(self.PIN_CLK,GPIO.OUT)
-        GPIO.setup(self.PIN_DAT,GPIO.IN)
-        GPIO.setup(self.PIN_CS,GPIO.OUT)                                                                                                    
-        GPIO.output(self.PIN_CS,1)
-        GPIO.output(self.PIN_CLK,1)
+#         GPIO.setup(self.PIN_CLK,GPIO.OUT)
+#         GPIO.setup(self.PIN_DAT,GPIO.IN)
+#         GPIO.setup(self.PIN_CS,GPIO.OUT)                                                                                                    
+#         GPIO.output(self.PIN_CS,1)
+#         GPIO.output(self.PIN_CLK,1)
         
         GPIO.output(self.PIN_CS,0)
         time.sleep(self.delay*2)
-        #MSB()
+        self.MSB()
         data = 0
         
         full_data = 0
@@ -59,35 +61,28 @@ class Encoder:
         for i in range(0,self.bitcount):
             if i<10:
                 #print i
-                #clockup()
+                self.clockup()
                 GPIO.output(self.PIN_CLK,1)
                 for j in range(0,self.ns):
                     data <<= 1  
                     data|= GPIO.input(self.PIN_DAT)
-                    
-                    full_data <<= 1  
-                    full_data |= GPIO.input(self.PIN_DAT)
-                #clockdown()
+                self.clockdown()
                 GPIO.output(self.PIN_CLK,0)
             else:
                 for k in range(0,6):
-                    #clockup()
-                    GPIO.output(self.PIN_CLK,1)
-                    full_data <<= 1  
-                    full_data |= GPIO.input(self.PIN_DAT)
-                    #clockdown()
-                    GPIO.output(self.PIN_CLK,0)
+                    self.clockup()
+                    self.clockdown()
         GPIO.output(self.PIN_CS,1)
-        #print("{:010b}".format(full_data))
-        return data-512;
+        return data;
 
 if __name__ == "__main__":
         
     try:
-        
+        encoder = Encoder();
         while(1):
             
-            #Print readpos()
+            #print("{:016b}".format(encoder.readpos()))
+            print(encoder.readpos())
             time.sleep(0.1)
             #break
             
