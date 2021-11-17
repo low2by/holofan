@@ -8,6 +8,13 @@ class Encoder:
         GPIO.setmode(GPIO.BCM)
 
     
+        #Pin1(Digital Input): nothing
+        #Pin2: Clock - GPIO2
+        #Pin3: GND - GND
+        #Pin4: Digital Output - GPIO3
+        #Pin5: VCC - 3.3v
+        #Pin6: CS - GPIO4
+        
         self.PIN_CLK = 2
         self.PIN_DAT = 3
         self.PIN_CS  = 4
