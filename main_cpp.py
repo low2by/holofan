@@ -49,7 +49,7 @@ last_step_dir = 'backward'
 print(w/2 - w*0.05, w/2 + w*0.05)
 itr = 0
 no_face_found_count = 0;
-p = subprocess.Popen(["../holofan_renderer/main_comm"], stdin=subprocess.PIPE)
+p = subprocess.Popen(["./HolofanRenderer/main_comm"], stdin=subprocess.PIPE)
 while True:
     faces = detector.detect()
 
