@@ -1,8 +1,10 @@
 from FaceDetector import FaceDetector
 from Stepper import Stepper
-from ObjectSpace import ObjectSpace
 import math 
+import subprocess
 
+horizontal_angle = 0;
+vertical_angle = -90;
 
 def search(detector, stepper, space):
     global last_step_dir
@@ -13,11 +15,15 @@ def search(detector, stepper, space):
         if len(faces)==0:
             stepper.step(last_step_dir)
             if last_step_dir == 'forward':
-                space.rotateModel(-1.8)
-                space.update()
+                horizontal_angle -= 1.8
+                # space.rotateModel(-1.8)
+                # space.update()
             else:
-                space.rotateModel(1.8)
-                space.update()
+                horizontal_angle += 1.8
+                # space.rotateModel(1.8)
+                # space.update()
+            stdout_data = p.communicate(input=[horizontal_angle, vertical_angle])[0]
+            #print(stdout_data)
         else:
             return faces
             
@@ -35,12 +41,6 @@ def imagetransform(yaxis, height, bcam = 5, bobj = 6, hdiff = 0.8333):
     #print(objangle)
     #rint('...............')
     return math.degrees(objangle)
-    
-
-
-space = ObjectSpace()
-space.load_obj("banana.obj", "banana")
-space.update()
 
 stepper = Stepper()
 detector = FaceDetector()
@@ -49,6 +49,7 @@ last_step_dir = 'backward'
 print(w/2 - w*0.05, w/2 + w*0.05)
 itr = 0
 no_face_found_count = 0;
+p = subprocess.Popen(["../holofan_renderer/main_comm"], stdin=subprocess.PIPE)
 while True:
     faces = detector.detect()
 
@@ -57,24 +58,25 @@ while True:
         centerx = int(faces[0][0] + faces[0][2]/2)
         centery = int(faces[0][1] + faces[0][3]/2)
         if centerx < w/2 - w*0.05:
-            print("step_left")
+            #print("step_left")
             last_step_dir = 'forward'
             stepper.step('forward')
-            space.rotateModel(-1.8)
-            space.update()
+            horizontal_angle -= 1.8
+            # space.rotateModel(-1.8)
+            # space.update()
         elif centerx > w/2 + w*0.05:
-            print("step_right")
+            #print("step_right")
             last_step_dir = 'backward'
             stepper.step('backward')
-            space.rotateModel(1.8)
-            space.update()
+            horizontal_angle += 1.8
+            # space.rotateModel(1.8)
+            # space.update()
         
         # if centery:
             # print("image_down")
             #last_step_dir = 'forward'
             #stepper.step_num(4, 'forward')
-        space.rotateModelAbst(imagetransform(centery, h), 'x') #hoping it is in the z direction
-        space.update()
+        vertical_angle = imagetransform(centery, h) #hoping it is in the z direction
         # elif centery > h/2 + h*0.05:
             # print("image_up")
             # #last_step_dir = 'backward'
@@ -87,6 +89,9 @@ while True:
         no_face_found_count += 1
         if(no_face_found_count > 10):
             search(detector, stepper, space)
+    p.stdin.write(str(horizontal_angle)+"|"+str(vertical_angle)+"\n")
+    p.stdin.flush()
+    #print(stdout_data)
 
-    detector.output(faces)            
+    #detector.output(faces)            
 
