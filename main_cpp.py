@@ -3,11 +3,12 @@ from Stepper import Stepper
 import math 
 import subprocess
 
-horizontal_angle = 0;
+horizontal_angle = 45;
 vertical_angle = -90;
 
-def search(detector, stepper, space):
+def search(detector, stepper):
     global last_step_dir
+    global horizontal_angle
     
     while True:
         faces = detector.detect()
@@ -22,7 +23,8 @@ def search(detector, stepper, space):
                 horizontal_angle += 1.8
                 # space.rotateModel(1.8)
                 # space.update()
-            stdout_data = p.communicate(input=[horizontal_angle, vertical_angle])[0]
+            p.stdin.write(str(horizontal_angle)+"|"+str(vertical_angle)+"\n")
+            p.stdin.flush()
             #print(stdout_data)
         else:
             return faces
@@ -46,7 +48,7 @@ stepper = Stepper()
 detector = FaceDetector()
 w, h = detector.useCam()
 last_step_dir = 'backward'
-print(w/2 - w*0.05, w/2 + w*0.05)
+#print(w/2 - w*0.05, w/2 + w*0.05)
 itr = 0
 no_face_found_count = 0;
 p = subprocess.Popen(["./HolofanRenderer/main_comm"], stdin=subprocess.PIPE)
@@ -88,10 +90,10 @@ while True:
     else:
         no_face_found_count += 1
         if(no_face_found_count > 10):
-            search(detector, stepper, space)
+            search(detector, stepper)
     p.stdin.write(str(horizontal_angle)+"|"+str(vertical_angle)+"\n")
     p.stdin.flush()
     #print(stdout_data)
 
-    #detector.output(faces)            
+    detector.output(faces)            
 

@@ -39,7 +39,7 @@ class PololuDriver():
         if (steps == 0):
             return
             
-        print("turn step:",steps)
+        #print("turn step:",steps)
         for i in range(steps):
             self.digital_write(self.step_pin, True)
             time.sleep(stepdelay)
