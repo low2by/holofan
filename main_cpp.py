@@ -2,6 +2,16 @@ from FaceDetector import FaceDetector
 from Stepper import Stepper
 import math 
 import subprocess
+import odrive
+from odrive.enums import *
+import time
+import signal
+import sys
+
+def handler(signum, frame):
+    my_drive.axis0.config.sensorless_ramp.vel = 0
+    my_drive.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+    exit(1)
 
 horizontal_angle = 45;
 vertical_angle = -90;
@@ -23,7 +33,7 @@ def search(detector, stepper):
                 horizontal_angle += 1.8
                 # space.rotateModel(1.8)
                 # space.update()
-            p.stdin.write(str(horizontal_angle)+"|"+str(vertical_angle)+"\n")
+            p.stdin.write(bytes(str(horizontal_angle)+"|"+str(vertical_angle)+"\n", "ascii"))
             p.stdin.flush()
             #print(stdout_data)
         else:
@@ -43,6 +53,42 @@ def imagetransform(yaxis, height, bcam = 5, bobj = 6, hdiff = 0.8333):
     #print(objangle)
     #rint('...............')
     return math.degrees(objangle)
+
+if(len(sys.argv) > 1 and sys.argv[1] == "spin"):
+    signal.signal(signal.SIGINT, handler)
+    # Find a connected ODrive (this will block until you connect one)
+    print("finding an odrive...")
+    my_drive = odrive.find_any()
+    
+    print("Bus voltage is " + str(my_drive.vbus_voltage) + "V")
+    print("Calibration current is " + str(my_drive.axis0.motor.config.calibration_current) + "A")
+    
+    # Set some hardware parameters temporarily
+    print("setting some hardware parameters temporarily")
+    my_drive.config.brake_resistance = 0.5
+    my_drive.axis0.motor.config.pole_pairs = 7
+    
+    print("starting calibration")
+    my_drive.axis0.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
+    
+    print("waiting for calibration to end...")
+    while my_drive.axis0.current_state != AXIS_STATE_IDLE:
+        time.sleep(0.1)
+    
+    # Closed loop control 
+    print("Changing state to closed loop control")
+    #my_drive.axis0.config.sensorless_ramp.vel = 380.95/60 * 2 * math.pi * 7
+    my_drive.axis0.config.sensorless_ramp.vel = 300/60 * 2 * math.pi * 7
+    my_drive.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+
+    while my_drive.axis0.current_state != AXIS_STATE_CLOSED_LOOP_CONTROL:
+        print("axis errors are:")
+        print(hex(my_drive.axis0.error))	
+        print("motor errors are:")
+        print(hex(my_drive.axis0.motor.error))
+        print("encoder errors are:")
+        print(hex(my_drive.axis0.encoder.error))
+        time.sleep(0.1)
 
 stepper = Stepper()
 detector = FaceDetector()
@@ -91,7 +137,7 @@ while True:
         no_face_found_count += 1
         if(no_face_found_count > 10):
             search(detector, stepper)
-    p.stdin.write(str(horizontal_angle)+"|"+str(vertical_angle)+"\n")
+    p.stdin.write(bytes(str(horizontal_angle)+"|"+str(vertical_angle)+"\n", "ascii"))
     p.stdin.flush()
     #print(stdout_data)
 
