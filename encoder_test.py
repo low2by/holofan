@@ -15,8 +15,8 @@ class Encoder:
         #Pin5: VCC - 3.3v
         #Pin6: CS - GPIO4
         
-        self.PIN_CLK = 2
-        self.PIN_DAT = 3
+        self.PIN_CLK = 17
+        self.PIN_DAT = 27
         self.PIN_CS  = 4
         self.delay = 0.0000005
         self.ns = 1 # number of sensors attached chaned this to one -emmanuel
@@ -31,12 +31,10 @@ class Encoder:
             GPIO.output(self.PIN_CS,1)
             GPIO.output(self.PIN_CLK,1)
         except:
-            print "ERROR. Unable to setup the configuration requested"                                     
+            print ("ERROR. Unable to setup the configuration requested")                                     
 
         #wait some time to start
         time.sleep(0.5)
-
-        print "GPIO configuration enabled"
     
 
 
@@ -66,7 +64,7 @@ class Encoder:
         full_data = 0
         
         for i in range(0,self.bitcount):
-            if i<10:
+            if i<16:
                 #print i
                 self.clockup()
                 GPIO.output(self.PIN_CLK,1)
@@ -75,10 +73,10 @@ class Encoder:
                     data|= GPIO.input(self.PIN_DAT)
                 self.clockdown()
                 GPIO.output(self.PIN_CLK,0)
-            else:
-                for k in range(0,6):
-                    self.clockup()
-                    self.clockdown()
+#             else:
+#                 for k in range(0,6):
+#                     self.clockup()
+#                     self.clockdown()
         GPIO.output(self.PIN_CS,1)
         return data;
 
@@ -94,5 +92,5 @@ if __name__ == "__main__":
             #break
             
     finally:
-        print "cleaning up GPIO"
+        print ("cleaning up GPIO")
         GPIO.cleanup()
