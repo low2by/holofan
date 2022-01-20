@@ -57,7 +57,7 @@ while my_drive.axis0.current_state != AXIS_STATE_IDLE:
 # Closed loop control 
 print("Changing state to closed loop control")
 #my_drive.axis0.config.sensorless_ramp.vel = 380.95/60 * 2 * math.pi * 7
-my_drive.axis0.config.sensorless_ramp.vel = 300/60 * 2 * math.pi * 7
+my_drive.axis0.config.sensorless_ramp.vel = 600/60 * 2 * math.pi * 7
 my_drive.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
 
 while my_drive.axis0.current_state != AXIS_STATE_CLOSED_LOOP_CONTROL:
@@ -71,6 +71,6 @@ while my_drive.axis0.current_state != AXIS_STATE_CLOSED_LOOP_CONTROL:
 
 print("current state is " + str(my_drive.axis0.current_state))
 
-p = subprocess.Popen(["./HolofanRenderer/main_ser"])
+p = subprocess.Popen(["/usr/bin/python3", "/home/pi/Desktop/sending_pi_holofan/holofan/main_pipe.py"])
 
 time.sleep(1000)

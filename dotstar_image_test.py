@@ -48,7 +48,7 @@ def main():
     while(True):
         print(encoder.readpos())
         #print("{:010b}".format(encoder.readpos()))
-        pi.spi_xfer(h, lines[encoder.readpos(), :].tolist())
+        pi.spi_xfer(h, lines[encoder.readpos() >> 6, :].tolist())
 
 def set_LED_RGB(led, r, g, b):
     offset = (led*4) +4
